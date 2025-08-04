@@ -1,0 +1,50 @@
+{
+  "name": "twitter-media-downloader",
+  "version": "1.0.0",
+  "description": "Modern Twitter Media Downloader built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac", 
+    "build:linux": "electron-builder --linux",
+    "dev": "electron . --dev"
+  },
+  "build": {
+    "appId": "com.twitter.media.downloader",
+    "productName": "Twitter Media Downloader",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js", 
+      "renderer.js",
+      "twitter-scraper.js",
+      "index.html",
+      "style.css",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage", 
+      "icon": "assets/icon.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
