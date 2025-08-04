@@ -27,8 +27,8 @@
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/your-username/twitter-media-downloader.git
-cd twitter-media-downloader
+git clone https://github.com/dekotan24/iCrawledTw-Electron.git
+cd iCrawledTw-Electron
 
 # 依存関係をインストール
 npm install
@@ -56,8 +56,8 @@ npm run build:linux  # Linux用
 
 1. **アプリを起動**
 2. **TwitterのURLを入力**
-   - ツイートURL: `https://twitter.com/username/status/1234567890`
-   - ユーザーURL: `https://twitter.com/username`
+   - ツイートURL: `https://twitter.com/username/status/1234567890` もしくは `https://x.com/username/1234567890`
+   - ユーザーURL: `https://twitter.com/username` もしくは `https://x.com/username`
 3. **「メディアを分析」をクリック**
 4. **ダウンロードしたいメディアを選択**
 5. **「選択項目をダウンロード」をクリック**
@@ -93,7 +93,7 @@ npm run build:linux  # Linux用
 ### プロジェクト構造
 
 ```
-twitter-media-downloader/
+iCrawledTw-Electron/
 ├── main.js              # Electronメインプロセス
 ├── preload.js           # IPCブリッジ
 ├── renderer.js          # フロントエンドロジック
@@ -129,8 +129,8 @@ electron . --dev
 ```json
 {
   "build": {
-    "appId": "com.yourcompany.twitter-media-downloader",
-    "productName": "Twitter Media Downloader",
+    "appId": "work.fanet.iCrawledTw.Electron",
+    "productName": "iCrawledTw-Electron",
     "directories": {
       "output": "dist"
     },
@@ -222,7 +222,7 @@ npm install
 
 ## 📄 ライセンス
 
-MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照
+MIT License
 
 ## 🙏 謝辞
 
@@ -233,7 +233,7 @@ MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照
 
 ## 📝 更新履歴
 
-### v1.0.0 (2025-01-XX)
+### v1.0.0 (2025-08-04)
 - 🎉 初回リリース
 - ✨ モダンなGlassmorphism UI
 - ⚡ 高速並列ダウンロード
