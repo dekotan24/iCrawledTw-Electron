@@ -1,0 +1,168 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [windows-2022, macos-latest, ubuntu-latest]
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Create package-lock.json
+      run: |
+        # package-lock.jsonが存在しない場合は作成
+        if [ ! -f package-lock.json ]; then
+          npm install --package-lock-only
+        fi
+      shell: bash
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Create necessary directories
+      run: |
+        mkdir -p assets
+        mkdir -p downloads
+        mkdir -p logs
+      shell: bash
+
+    - name: Create default icon (if not exists)
+      run: |
+        if [ ! -f assets/icon.png ]; then
+          # Create a simple default icon using ImageMagick or a placeholder
+          echo "Creating default icon..."
+          # For now, we'll skip icon creation in CI
+        fi
+      shell: bash
+
+    - name: Run tests (if any)
+      run: |
+        # Add test command here if you have tests
+        echo "No tests configured"
+      continue-on-error: true
+
+    - name: Build Electron app (Windows)
+      if: matrix.os == 'windows-2022'
+      run: npm run build:win
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build Electron app (macOS)
+      if: matrix.os == 'macos-latest'
+      run: npm run build:mac
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build Electron app (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: npm run build:linux
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Windows artifacts
+      if: matrix.os == 'windows-2022'
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-build
+        path: |
+          dist/*.exe
+          dist/*.msi
+        retention-days: 7
+
+    - name: Upload macOS artifacts
+      if: matrix.os == 'macos-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-build
+        path: |
+          dist/*.dmg
+          dist/*.zip
+        retention-days: 7
+
+    - name: Upload Linux artifacts
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-build
+        path: |
+          dist/*.AppImage
+          dist/*.deb
+          dist/*.rpm
+        retention-days: 7
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/windows-build/*
+          ./artifacts/macos-build/*
+          ./artifacts/linux-build/*
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Install dependencies
+      run: |
+        npm install --package-lock-only
+        npm ci
+
+    - name: Run security audit
+      run: npm audit --audit-level high
+      continue-on-error: true
+
+    - name: Check for vulnerabilities
+      run: |
+        npm audit --audit-level high --json > audit-results.json || true
+        echo "Security scan completed"
+
+    - name: Upload security scan results
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-scan
+        path: audit-results.json
+        retention-days: 30
