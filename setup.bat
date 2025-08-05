@@ -2,7 +2,7 @@
 chcp 65001 > nul
 echo.
 echo ========================================
-echo Twitter Media Downloader - セットアップ
+echo iCrawledTw-Electron - セットアップ
 echo ========================================
 echo.
 
@@ -103,7 +103,7 @@ echo   - Ctrl+Enter でURL解析
 echo   - Ctrl+D でダウンロード開始
 echo   - F5 で再解析
 echo.
-echo 🎉 Twitter Media Downloaderをお楽しみください！
+echo 🎉 iCrawledTw-Electronをお楽しみください！
 echo.
 echo 続行するには何かキーを押してください...
 pause > nul

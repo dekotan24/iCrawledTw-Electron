@@ -2,7 +2,6 @@
 
 **Twitterメディアダウンローダー**
 
-![App Screenshot](https://via.placeholder.com/800x500/0a0e1a/3b82f6?text=Twitter+Media+Downloader)
 
 ## ✨ 特徴
 
@@ -33,7 +32,7 @@
 2. **setup.bat をダブルクリック**
    ```
    ========================================
-   Twitter Media Downloader - セットアップ
+   iCrawledTw-Electron - セットアップ
    ========================================
    
    [1/5] Node.jsの確認中...
@@ -54,7 +53,7 @@
 
 3. **run.bat をダブルクリック**
    ```
-   🚀 Twitter Media Downloader を起動中...
+   🚀 iCrawledTw-Electron を起動中...
    ✅ 起動準備完了
    📱 アプリケーションを起動しています...
    ```
@@ -66,7 +65,7 @@
 ```bash
 # リポジトリをクローン（またはファイルをダウンロード）
 git clone https://github.com/dekotan24/iCrawledTw-Electron.git
-cd twitter-media-downloader
+cd iCrawledTw-Electron
 
 # 依存関係をインストール
 npm install

@@ -1,9 +1,9 @@
 @echo off
 chcp 65001 > nul
-title Twitter Media Downloader
+title iCrawledTw-Electron
 
 echo.
-echo 🚀 Twitter Media Downloader を起動中...
+echo 🚀 iCrawledTw-Electron を起動中...
 echo.
 
 REM Node.jsの確認

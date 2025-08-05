@@ -69,7 +69,7 @@ async function initializeApp() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
   
-  showToast('success', 'アプリケーション起動', 'Twitter Media Downloaderが正常に起動しました');
+  showToast('success', 'アプリケーション起動', 'iCrawledTw-Electronが正常に起動しました');
 }
 
 // Setup Event Listeners

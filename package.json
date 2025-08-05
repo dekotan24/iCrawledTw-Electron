@@ -1,5 +1,5 @@
 {
-  "name": "twitter-media-downloader",
+  "name": "iCrawledTw-Electron",
   "version": "1.0.0",
   "description": "Modern Twitter Media Downloader built with Electron",
   "main": "main.js",
@@ -12,8 +12,8 @@
     "dev": "electron . --dev"
   },
   "build": {
-    "appId": "com.twitter.media.downloader",
-    "productName": "Twitter Media Downloader",
+    "appId": "work.fanet.icrawledtw-electron",
+    "productName": "iCrawledTw-Electron",
     "directories": {
       "output": "dist"
     },
