@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Media Downloader</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- カスタムタイトルバー -->
+    <div class="titlebar">
+        <div class="titlebar-drag-region">
+            <div class="titlebar-title">
+                <i data-lucide="twitter" class="title-icon"></i>
+                <span>Twitter Media Downloader</span>
+            </div>
+        </div>
+        <div class="titlebar-controls">
+            <button class="titlebar-button" id="minimize-btn" title="最小化">
+                <i data-lucide="minus"></i>
+            </button>
+            <button class="titlebar-button" id="maximize-btn" title="最大化">
+                <i data-lucide="square"></i>
+            </button>
+            <button class="titlebar-button close" id="close-btn" title="閉じる">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-container">
+        <!-- サイドバー -->
+        <div class="sidebar">
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="download">
+                    <i data-lucide="download"></i>
+                    <span>ダウンロード</span>
+                </button>
+                <button class="nav-item" data-tab="history">
+                    <i data-lucide="history"></i>
+                    <span>履歴</span>
+                </button>
+                <button class="nav-item" data-tab="settings">
+                    <i data-lucide="settings"></i>
+                    <span>設定</span>
+                </button>
+                <button class="nav-item" data-tab="about">
+                    <i data-lucide="info"></i>
+                    <span>情報</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="theme-toggle" title="テーマ切り替え">
+                    <i data-lucide="moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- メインコンテンツエリア -->
+        <div class="content-area">
+            <!-- ダウンロードタブ -->
+            <div class="tab-content active" id="download-tab">
+                <div class="tab-header">
+                    <h2>メディアダウンロード</h2>
+                    <p>TwitterのURLを入力してメディアファイルをダウンロードしましょう</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="input-group">
+                        <label for="twitter-url">Twitter URL</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="link" class="input-icon"></i>
+                            <input type="text" id="twitter-url" placeholder="https://twitter.com/username/status/123456789" />
+                            <button class="input-button" id="paste-btn" title="貼り付け">
+                                <i data-lucide="clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="options-row">
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-download" checked>
+                                <span class="checkmark"></span>
+                                自動ダウンロード
+                            </label>
+                        </div>
+                        <div class="option-group">
+                            <label for="media-type">メディアタイプ</label>
+                            <select id="media-type">
+                                <option value="all">すべて</option>
+                                <option value="images">画像のみ</option>
+                                <option value="videos">動画のみ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="primary-button" id="analyze-btn">
+                        <i data-lucide="search"></i>
+                        <span>メディアを分析</span>
+                    </button>
+                </div>
+
+                <!-- 結果表示エリア -->
+                <div class="results-container" id="results-container" style="display: none;">
+                    <div class="results-header">
+                        <h3>検出されたメディア</h3>
+                        <div class="results-actions">
+                            <button class="secondary-button" id="select-all-btn">
+                                <i data-lucide="check-square"></i>
+                                すべて選択
+                            </button>
+                            <button class="primary-button" id="download-selected-btn">
+                                <i data-lucide="download"></i>
+                                選択項目をダウンロード
+                            </button>
+                        </div>
+                    </div>
+                    <div class="media-grid" id="media-grid">
+                        <!-- メディアアイテムがJavaScriptで動的に生成される -->
+                    </div>
+                </div>
+
+                <!-- プログレスエリア -->
+                <div class="progress-container" id="progress-container" style="display: none;">
+                    <div class="progress-header">
+                        <h3>ダウンロード進行状況</h3>
+                        <span class="progress-stats" id="progress-stats">0/0 完了</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-logs" id="progress-logs">
+                        <!-- ログがJavaScriptで動的に生成される -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 履歴タブ -->
+            <div class="tab-content" id="history-tab">
+                <div class="tab-header">
+                    <h2>ダウンロード履歴</h2>
+                    <p>過去のダウンロード履歴を確認できます</p>
+                </div>
+                <div class="glass-card">
+                    <div class="history-list" id="history-list">
+                        <div class="empty-state">
+                            <i data-lucide="history"></i>
+                            <h3>まだ履歴がありません</h3>
+                            <p>メディアをダウンロードすると、ここに履歴が表示されます</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 設定タブ -->
+            <div class="tab-content" id="settings-tab">
+                <div class="tab-header">
+                    <h2>設定</h2>
+                    <p>ダウンロードの動作をカスタマイズできます</p>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="glass-card">
+                        <h3>
+                            <i data-lucide="folder"></i>
+                            ダウンロード設定
+                        </h3>
+                        <div class="setting-item">
+                            <label>保存先フォルダ</label>
+                            <div class="folder-selector">
+                                <input type="text" id="download-path" readonly>
+                                <button class="secondary-button" id="select-folder-btn">
+                                    <i data-lucide="folder-open"></i>
+                                    選択
+                                </button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="create-subfolders">
+                                <span class="checkmark"></span>
+                                ユーザーごとにサブフォルダを作成
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="skip-existing">
+                                <span class="checkmark"></span>
+                                既存ファイルをスキップ
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>
+                            <i data-lucide="zap"></i>
+                            パフォーマンス設定
+                        </h3>
+                        <div class="setting-item">
+                            <label>同時ダウンロード数</label>
+                            <input type="range" id="concurrent-downloads" min="1" max="5" value="3">
+                            <span class="range-value">3</span>
+                        </div>
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enable-logs">
+                                <span class="checkmark"></span>
+                                詳細ログを有効にする
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>
+                            <i data-lucide="image"></i>
+                            メディア設定
+                        </h3>
+                        <div class="setting-item">
+                            <label>画像品質</label>
+                            <select id="image-quality">
+                                <option value="original" selected>オリジナル</option>
+                                <option value="large">大サイズ</option>
+                                <option value="medium">中サイズ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button class="secondary-button" id="reset-settings-btn">
+                        <i data-lucide="rotate-ccw"></i>
+                        設定をリセット
+                    </button>
+                    <button class="primary-button" id="save-settings-btn">
+                        <i data-lucide="save"></i>
+                        設定を保存
+                    </button>
+                </div>
+            </div>
+
+            <!-- 情報タブ -->
+            <div class="tab-content" id="about-tab">
+                <div class="tab-header">
+                    <h2>アプリケーション情報</h2>
+                    <p>Twitter Media Downloaderについて</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="about-content">
+                        <div class="app-icon">
+                            <i data-lucide="twitter"></i>
+                        </div>
+                        <h3>Twitter Media Downloader</h3>
+                        <p>モダンで高機能なTwitterメディアダウンローダー</p>
+                        
+                        <div class="app-info" id="app-info">
+                            <!-- アプリ情報がJavaScriptで動的に生成される -->
+                        </div>
+
+                        <div class="about-actions">
+                            <button class="secondary-button" id="open-download-folder-btn">
+                                <i data-lucide="folder-open"></i>
+                                ダウンロードフォルダを開く
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ローディングオーバーレイ -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p id="loading-text">処理中...</p>
+        </div>
+    </div>
+
+    <!-- 通知トースト -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- スクリプト -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <script src="renderer.js"></script>
+    <script>
+        // Lucideアイコンを初期化
+        lucide.createIcons();
+    </script>
+</body>
+</html>
